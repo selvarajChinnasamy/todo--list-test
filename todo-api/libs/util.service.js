@@ -5,7 +5,7 @@ class UtilService {
     return JSON.parse(JSON.stringify(obj));
   }
   creteGetCountQuery(tableName, where_clause) {
-    return `SELECT count(*) as count from ${tableName} where ${Object.keys(where_clause).map( key => `\`${key}\` = \'${where_clause[key]}\'`).join('and')}`
+    return `SELECT count(*) as count from ${tableName} where ${Object.keys(where_clause).map(key => `\`${key}\` = \'${where_clause[key]}\'`).join('and')}`
   }
   createGetQuery(selectObject, conditionObject, tableName) {
     const toSelected = selectObject === 'all' ? '*' : selectObject.join();
@@ -17,16 +17,16 @@ class UtilService {
     return `Insert into ${tableName} (\`${Object.keys(value).join('\`,\`')}\`) values ('${Object.values(value).join('\',\'')}')`;
   }
   createUpdateQuery(value, tableName, where_clause) {
-    return `Update ${tableName} set  ${Object.keys(value).map(key => `\`${key}\` = \'${value[key]}\'`).join()} where ${(Object.keys(where_clause).length === 0) ? 1 : Object.keys(where_clause).map( key => `\`${key}\` = \'${where_clause[key]}\'`).join('and')}`;
+    return `Update ${tableName} set  ${Object.keys(value).map(key => `\`${key}\` = \'${value[key]}\'`).join()} where ${(Object.keys(where_clause).length === 0) ? 1 : Object.keys(where_clause).map(key => `\`${key}\` = \'${where_clause[key]}\'`).join('and')}`;
   }
   createDeleteQuery(tableName, where_clause) {
-    return `Delete from ${tableName} where ${Object.keys(where_clause).map( key => `\`${key}\` = \'${where_clause[key]}\'`).join('and')}`;
+    return `Delete from ${tableName} where ${Object.keys(where_clause).map(key => `\`${key}\` = \'${where_clause[key]}\'`).join('and')}`;
   }
   createBulkPostQuery(values, tableName) {
     let sql = `Insert into \`${tableName}\` values ?`;
     return { query: sql, values: values };
   }
-  gendrateUUID(){
+  gendrateUUID() {
     return uuidv4();
   }
 }

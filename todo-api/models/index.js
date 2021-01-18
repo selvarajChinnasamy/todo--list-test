@@ -13,11 +13,16 @@ const db = {};
 try {
     global.connection.execute = function (sql, value) {
         return new Promise((resolve, reject) => {
-            const connection = mysql.createConnection(config.db);
-            connection.query(sql, value, function (err, result) {
-                if (err) return reject(err);
-                return resolve(result);
-            });
+            try {
+                const connection = mysql.createConnection(config.db);
+                connection.query(sql, value, function (err, result) {
+                    if (err) return reject(err);
+                    return resolve(result);
+                });
+            }
+            catch (err) {
+                return reject("Something went wrong!");
+            }
         });
     };
     console.log('DB connection established');
