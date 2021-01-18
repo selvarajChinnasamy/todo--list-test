@@ -1,0 +1,18 @@
+version: '2'
+services:
+  node:
+    build: ./todo-api
+    command: npm run devServer
+    volumes:
+      - ./todo-api:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "3002:3002"
+  client:
+    build: ./todo-frontend
+    command: npm run devServer
+    volumes:
+      - ./todo-frontend:/usr/client/
+      - /usr/client/node_modules
+    ports:
+      - "3000:3000"

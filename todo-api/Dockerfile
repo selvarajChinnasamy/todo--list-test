@@ -1,6 +1,4 @@
-FROM node:12
-WORKDIR /usr/src/app
-COPY ["package*.json", "server.js", "swagger.json", ".env", "./"]
+FROM node:10
+WORKDIR /usr/app
+COPY . .
 RUN npm install
-EXPOSE 3002
-CMD [ "npm", "run", "devServer" ]
