@@ -17,13 +17,21 @@ router.get('/', (req, res, next) => {
     task.getTask(req.user).then(tasks => {
         res.status(200).json({
             success: true,
-            tasks,
+            ...tasks,
         });
     }).catch(err => next(err, req, res, next));
 });
 
 router.get('/:id', (req, res, next) => {
     task.getTask(req.user, req.params.id).then(tasks => {
+        res.status(200).json({
+            success: true,
+            ...tasks,
+        });
+    }).catch(err => next(err, req, res, next));
+});
+router.delete('/:id', (req, res, next) => {
+    task.deleteTask(req.params.id).then(tasks => {
         res.status(200).json({
             success: true,
             ...tasks,

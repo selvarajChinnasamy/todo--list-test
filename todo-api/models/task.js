@@ -53,6 +53,26 @@ class Task {
             }
         })
     }
+
+    deleteTask(taskId) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (!taskId) {
+                    return reject({ status: 400, message: 'Bad request!' });
+                }
+                const conditions = { id: taskId };
+                const sqlOperation = utilService.createDeleteQuery(Task.tableName, conditions);
+                await global.connection.execute(sqlOperation, []);
+                return resolve({
+                    message: 'Task deleted!'
+                });
+            }
+            catch (err) {
+                console.log(err);
+                return reject({ status: 500, message: 'Something went wrong!' });
+            }
+        })
+    }
 }
 
 module.exports = Task;

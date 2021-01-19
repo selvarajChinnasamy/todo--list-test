@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express'),
   app = express(),
+  cors = require('cors'),
   port = process.env.API_APP_PORT || 3002,
   host = process.env.HOST,
   bodyParser = require('body-parser'),
@@ -10,10 +11,11 @@ const express = require('express'),
   middlewares = require('./middlewares/common');
 
 
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(middlewares.enableCors);
 app.use(middlewares.authenticate);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
