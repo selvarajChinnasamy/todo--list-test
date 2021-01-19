@@ -16,9 +16,9 @@ app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(middlewares.authenticate);
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+app.use(middlewares.authenticate);
 
 global.jwt = require('jsonwebtoken');
 

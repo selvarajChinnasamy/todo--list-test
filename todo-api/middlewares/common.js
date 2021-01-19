@@ -1,4 +1,5 @@
 const validateAuth = function (req, res, next) {
+    console.log(req.path);
     if (req.type == 'OPTIONS' || req.path == '/api/user/login') {
         return next();
     }
