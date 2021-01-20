@@ -5,8 +5,8 @@ import { useHistory } from "react-router-dom";
 
 const Login = () => {
     const history = useHistory();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [email, setEmail] = useState("selvarajchinnasamyks@gmail.com");
+    const [password, setPassword] = useState("selva");
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -58,8 +58,8 @@ const Login = () => {
                             <ClipLoader color={"#FF4B2B"} loading={true} size={150} />
                         </div> : null}
                         <h1>Sign in</h1>
-                        <input onChange={(event) => setEmail(event.target.value)} type="email" placeholder="Email" />
-                        <input onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" />
+                        <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" placeholder="Email" />
+                        <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" />
                         <div style={{ marginTop: 15 }}>
                             <button type="submit">Sign In</button>
                         </div>

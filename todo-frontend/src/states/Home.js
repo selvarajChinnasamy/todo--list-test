@@ -151,8 +151,8 @@ const Home = () => {
                 <i style={{ float: 'right' }} onClick={() => setAddPopup(false)} className="fa fa-times" aria-hidden="true" />
                 <div style={{ textAlign: "center" }}>Add Task</div>
                 <form onSubmit={addTaskFormHandler}>
-                    <input onChange={(event) => setAddFormTaskName(event.target.value)} placeholder="Name" />
-                    <input onChange={(event) => setAddFormTaskDesc(event.target.value)} placeholder="Description" />
+                    <input value={addFormTaskName} onChange={(event) => setAddFormTaskName(event.target.value)} placeholder="Name" />
+                    <input value={addFormTaskDesc} onChange={(event) => setAddFormTaskDesc(event.target.value)} placeholder="Description" />
                     <button type="submit">Add</button>
                 </form>
             </Modal>
