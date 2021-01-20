@@ -1,6 +1,19 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { get, delet } from '../services/http.service';
+import { get, delet, post } from '../services/http.service';
 import ClipLoader from "react-spinners/ClipLoader";
+import Modal from 'react-modal';
+import moment from 'moment';
+
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)'
+    }
+};
 
 const updateTaskList = (tasks, action) => {
     switch (action.type) {
@@ -15,10 +28,23 @@ const updateTaskList = (tasks, action) => {
     }
 }
 
+const getRandomColor = () => {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 const Home = () => {
 
     const [tasks, dispatch] = useReducer(updateTaskList, []);
     const [loading, setLoading] = useState(false);
+    const [addPopup, setAddPopup] = useState(false);
+    const [currentParentId, setCurrentParentId] = useState();
+    const [addFormTaskName, setAddFormTaskName] = useState();
+    const [addFormTaskDesc, setAddFormTaskDesc] = useState();
 
     useEffect(() => {
         getTasks();
@@ -56,15 +82,6 @@ const Home = () => {
         }
     }
 
-    const getRandomColor = () => {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
     const getChildrens = (parentId) => {
         return tasks.filter(task => (task.parent_id === parentId));
     }
@@ -78,6 +95,7 @@ const Home = () => {
                         <p style={{ color: "#ffff" }}>{task.desc}</p>
                     </div>
                     <button onClick={() => deletTask(task.id)} style={{ margin: 10 }}>Delete</button>
+                    <button onClick={() => openAddForm(task.id)} style={{ margin: 10 }}>Add</button>
                     <div>
                         {getChildrens(task.id).map(task => {
                             return plotTask(task, marginLeft + 10);
@@ -85,6 +103,59 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+        );
+    }
+
+    const openAddForm = (parentId) => {
+        setCurrentParentId(parentId);
+        setAddPopup(true);
+    }
+
+    const addTaskFormHandler = async (event) => {
+        event.preventDefault();
+        try {
+            if (!(addFormTaskName && addFormTaskDesc)) {
+                alert("Invalid name or description");
+                return;
+            }
+            console.log(moment());
+            const reqObj = {
+                name: addFormTaskName,
+                desc: addFormTaskDesc,
+                parent_id: currentParentId,
+                created_at: moment()
+            };
+            const responce = await post("task", reqObj);
+            if (responce && responce.success && responce.id) {
+                dispatch({ type: "add", task: { ...reqObj, id: responce.id } });
+                setAddPopup(false);
+                alert("Task created.");
+            } else {
+                alert((responce && responce.message) ? responce.message : "something went wrong!.");
+            }
+        }
+        catch (err) {
+            console.log(err);
+            alert("something went wrong!.");
+        }
+    }
+
+    const addModel = () => {
+        return (
+            <Modal
+                isOpen={addPopup}
+                onRequestClose={() => setAddPopup(false)}
+                style={customStyles}
+                contentLabel="Example Modal"
+            >
+                <i style={{ float: 'right' }} onClick={() => setAddPopup(false)} className="fa fa-times" aria-hidden="true" />
+                <div style={{ textAlign: "center" }}>Add Task</div>
+                <form onSubmit={addTaskFormHandler}>
+                    <input onChange={(event) => setAddFormTaskName(event.target.value)} placeholder="Name" />
+                    <input onChange={(event) => setAddFormTaskDesc(event.target.value)} placeholder="Description" />
+                    <button type="submit">Add</button>
+                </form>
+            </Modal>
         );
     }
 
@@ -116,6 +187,7 @@ const Home = () => {
                     <ClipLoader color={"#FF4B2B"} loading={true} size={150} />
                 </div> : showTasks()}
             </div>
+            {addModel()}
         </div>
     );
 };
